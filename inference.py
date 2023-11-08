@@ -100,17 +100,6 @@ def tile_process(model, img, scale=4, tile_size = 640, tile_pad = 10):
     return output
 
 if __name__=='__main__':
-    # 基础混合退化修复
-    # scale = 1
-    # model = MixNet_l().cuda()
-    # model_path = r'N:\zhangdy\code_zdy\code_basicsr\BasicSR\experiments\MGTVOld_001_MixNet_repairev1\models\net_g_858000.pth'
-
-    # 基础混合退化超分
-    # scale = 2
-    # model = MixNet_b().cuda()
-    # # model_path = r'N:\zhangdy\code_zdy\code_basicsr\BasicSR\experiments\MGTVOld_SR_002_MixNet_repaireSRv1\models\net_g_316000.pth'
-    # model_path = r'O:\zhangdy\code_zdy\code_basicsr\BasicSR\experiments\MGTVOld_SR_002_MixNet_repaireSRv1_GAN\models\net_g_400000.pth'
-
     # 开源模型
     # ------------- 模型1-RealESRGAN
     scale = 2
@@ -140,14 +129,8 @@ if __name__=='__main__':
     # # ------------ load model
     load_checkpoint_basicsr(model, model_path)
     model.eval()
-    # img_path_list = glob.glob(r'N:\zhangdy\dataset\old_files\damage\*.jpg')
-    # img_path_list = glob.glob(r'P:\GPU-Server\tansong\MZD图书馆_勿外传\1、韶山毛主席影像展130—330幅毛泽东照片夹\*.jpg')
-    # img_path_list = glob.glob(r'P:\GPU-Server\tansong\MZD图书馆_勿外传\扫描样片\*.tif')
-    # img_path_list = glob.glob(r'P:\GPU-Server\tansong\MZD图书馆_勿外传\1、韶山毛主席影像展130—330幅毛泽东照片夹\新建文件夹 (3)\*.jpg')
-    # img_path_list = glob.glob(r'N:\zhangdy\dataset\challenge_data2020\data_png\test\damage\*\*.png')[::20]
-    ############################## 新测试图
-    img_path_list = glob.glob(r'N:\zhangdy\workdir\MZD\图书馆展陈内容PNG_D8\第一部分--爱读书\1、毛泽东读书组照（瀑布屏）\*.png')
-    save_path = r'P:\GPU-Server\tansong\MZD图书馆_勿外传\图书馆展陈内容\part_out\realesrganx2'
+    img_path_list = glob.glob(r'./*.png')
+    save_path = r'./part_out/realesrganx2'
     os.makedirs(save_path, exist_ok=True)
 
     for img_path in img_path_list:
