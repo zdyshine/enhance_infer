@@ -21,7 +21,7 @@ def MixNet_l():
     # 基础混合退化修复,自训练
     scale = 1
     model = MixNet_l().cuda()
-    model_path = r'N:\zhangdy\code_zdy\code_basicsr\BasicSR\experiments\MGTVOld_001_MixNet_repairev1\models\net_g_858000.pth'
+    model_path = r'net_g_858000.pth'
     # # ------------ load model
     load_checkpoint_basicsr(model, model_path)
     model.eval()
@@ -31,8 +31,7 @@ def MixNet_b():
     # 基础混合退化超分
     scale = 2
     model = MixNet_b().cuda()
-    # model_path = r'N:\zhangdy\code_zdy\code_basicsr\BasicSR\experiments\MGTVOld_SR_002_MixNet_repaireSRv1\models\net_g_316000.pth'
-    model_path = r'O:\zhangdy\code_zdy\code_basicsr\BasicSR\experiments\MGTVOld_SR_002_MixNet_repaireSRv1_GAN\models\net_g_400000.pth'
+    model_path = r'net_g_400000.pth'
     load_checkpoint_basicsr(model, model_path)
     model.eval()
     return model, scale
