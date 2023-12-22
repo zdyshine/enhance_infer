@@ -160,6 +160,7 @@ class Reader:
                 ffmpeg
                 .input(video_path)
                 .output('pipe:', format='rawvideo', pix_fmt='rgb24', loglevel='error') # bgr24 -> rgb24
+                # .output('pipe:', vf="yadif", format='rawvideo', pix_fmt='bgr24', loglevel='error') # 去隔行，针对老片
                 .run_async(pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin)
             )  # yapf: disable  # noqa
             meta = get_video_meta_info(video_path)
@@ -267,23 +268,27 @@ class Writer:
                 .run_async(pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin)
             )  # yapf: disable  # noqa
         else:
-            # self.stream_writer = (
-            #     ffmpeg
-            #     .input('pipe:', format='rawvideo', pix_fmt='rgb24', s=f'{out_width}x{out_height}', framerate=fps)
-            #     .output(vsp, preset='slower', pix_fmt='yuv420p',
-            #                 # vcodec='libx264', x264opts=f'force-cfr:fps={fps}:qp=12:colorprim=bt709:transfer=bt709:colormatrix=bt709',
-            #                 vcodec='libx264', x264opts=f'force-cfr:fps={fps}:qp=12',
-            #                 loglevel='error')
-            #     .overwrite_output()
-            #     .run_async(pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin)
-            # )
-         # 针对老片的，添加aspect='4:3'
-            self.stream_writer = (ffmpeg.input('pipe:', format='rawvideo', pix_fmt='rgb24', s=f'{out_width}x{out_height}',
-                             framerate=fps).output(
-                    video_save_path, aspect='4:3', preset='slower',
-                    pix_fmt='yuv420p', vcodec='libx264', x264opts='force-cfr:fps=25:qp=10:colorprim=bt709:transfer=bt709:colormatrix=bt709',
-                    loglevel='error').overwrite_output().run_async(
-                    pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin))
+            self.stream_writer = (
+                ffmpeg
+                .input('pipe:', format='rawvideo', pix_fmt='rgb24', s=f'{out_width}x{out_height}', framerate=fps)
+                .output(vsp, preset='slower', pix_fmt='yuv420p',
+                            # vcodec='libx264', x264opts=f'force-cfr:fps={fps}:qp=12:colorprim=bt709:transfer=bt709:colormatrix=bt709',
+                            vcodec='libx264', x264opts=f'force-cfr:fps={fps}:qp=12',
+                            loglevel='error')
+                .overwrite_output()
+                .run_async(pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin)
+            )
+        #  # # 针对老片的，添加aspect='4:3'
+        # ######## 2023-11-17 MZD, 针对720x576的老片，保持宽高比操作
+        # self.stream_writer = (
+        #     ffmpeg.input('pipe:', format='rawvideo', pix_fmt='bgr24', s=f'{out_width}x{out_height}', framerate=fps)
+        #     # .output(video_save_path, vf="setsar=sar=15/16,setdar=dar=4/3", preset='slower', pix_fmt='yuv420p',  #  针对720x576的老片，保持宽高比操作
+        #     .output(video_save_path, preset='slower', pix_fmt='yuv420p',
+        #             vcodec='libx264',
+        #             x264opts=f'force-cfr:fps={fps}:keyint=125:min-keyint=125:scenecut=0:qp=12:deblock=0,0',
+        #             loglevel='error')
+        #     .overwrite_output().run_async(pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin))
+
         self.out_width = out_width
         self.out_height = out_height
         self.args = args
