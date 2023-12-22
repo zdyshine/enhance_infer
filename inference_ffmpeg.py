@@ -15,7 +15,10 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
     use_cuda = True
     device = torch.device('cuda' if use_cuda else 'cpu')
 
-    model, _ = DiffIR_SR()
+    model, _ = NAFLKACPUNet_repaire()
+    # model, _ = NAFLKAGPUNet_repaire()
+    if args.half:
+        model=model.half()
 
     # torch.cuda.empty_cache()
 
