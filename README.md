@@ -8,6 +8,7 @@ mkdir checkpoints 文件夹放置对应网络的预训练模型
 defint_network中添加调用模型和加载预训练模型代码    
 inference.py进行图片推理        
 inference_ffmpeg.py加载视频推理    
+run.py python调用ffmpeg, ffmpeg混合滤镜，指定显示宽高比
 
 #### 已集成list:
 https://github.com/xinntao/Real-ESRGAN    
