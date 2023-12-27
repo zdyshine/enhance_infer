@@ -21,8 +21,8 @@ out_W= 848 # 960 # 848
 NTE_LOAD='DownNetNFv1_Grad_226000.pth'
 
 def nndown_bicubicup():
-    # video_list = glob.glob(f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/测试视频源/*')
-    video_list = glob.glob(f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/测试视频源_动漫/*')
+    video_list = glob.glob(f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/测试视频源/*')
+    # video_list += glob.glob(f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/测试视频源_动漫/*')
     output_dir = f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/{NET_NAME}/nndown{out_H}_bicubicup'
     os.makedirs(output_dir, exist_ok=True)
     # video sr
@@ -31,11 +31,13 @@ def nndown_bicubicup():
             output_video = os.path.join(output_dir, base_name.split('.')[0] + '.y4m')
             command_NNDownUP = (
                         'CUDA_VISIBLE_DEVICES=1 /home/zhoujs/mgtvML_FFmpeg/ffmpeg'
-                        + ' -an'
-                        + ' -ss 00:02:00 -to 00:03:00'
+                        # + ' -an'
+                        # + ' -ss 00:02:00 -to 00:03:00'
                         + ' -i "{}"'.format(video)
+                        + ' -t 60'
                         # + ' -vf "[INPUT]format=rgb24,mgtvpythonisr=path=/home/zhoujs/mgtvML_FFmpeg/NNResize/:model=/home/zhoujs/mgtvML_FFmpeg/NNResize/checkpoints/DownNetNFv1_196000.pth.pth:multiple=1:width=960:height=540:module_name=NNResize_GPU[FID0];[FID0]scale=w=1920:h=1080:sws_flags=lanczos[OUTPUT]"'
-                        + f' -vf "[INPUT]format=rgb24,mgtvpythonisr=path=/home/zhoujs/mgtvML_FFmpeg/NNResize/:model=/home/zhoujs/mgtvML_FFmpeg/NNResize/checkpoints/{NTE_LOAD}:multiple=1:width={out_W}:height={out_H}:module_name=NNResize_GPU[FID0];[FID0]scale=w=1920:h=1080:sws_flags=bicubic[OUTPUT]"'
+                        + f' -vf "[INPUT]format=rgb24,mgtvpythonisr=path=/home/zhoujs/mgtvML_FFmpeg/NNResize/:model=/home/zhoujs/mgtvML_FFmpeg/NNResize/checkpoints/{NTE_LOAD}:multiple=1:width={out_W}:height={out_H}:module_name=NNResize_GPU[FID0];'
+                          f'[FID0]scale=w=1920:h=1080:sws_flags=bicubic[FID1];[FID1]setsar=sar=16/9[FID2];[FID2]setdar=dar=16/9[OUTPUT]"'
                         + ' -pix_fmt yuv420p -r 25 -y'
                         + ' "{}"'.format(output_video)
                     )
@@ -43,8 +45,8 @@ def nndown_bicubicup():
             subprocess.call(command_NNDownUP, shell=True)
 
 def nndown_lanczosup():
-    # video_list = glob.glob(f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/测试视频源/*')
-    video_list = glob.glob(f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/测试视频源_动漫/*')
+    video_list = glob.glob(f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/测试视频源/*')
+    # video_list += glob.glob(f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/测试视频源_动漫/*')
     output_dir = f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/{NET_NAME}/nndown{out_H}_lanczosup'
     os.makedirs(output_dir, exist_ok=True)
     # video sr
@@ -53,11 +55,13 @@ def nndown_lanczosup():
             output_video = os.path.join(output_dir, base_name.split('.')[0] + '.y4m')
             command_NNDownUP = (
                         'CUDA_VISIBLE_DEVICES=1 /home/zhoujs/mgtvML_FFmpeg/ffmpeg'
-                        + ' -an'
-                        + ' -ss 00:02:00 -to 00:03:00'
+                        # + ' -an'
+                        # + ' -ss 00:02:00 -to 00:03:00'
                         + ' -i "{}"'.format(video)
+                        + ' -t 60'
                         # + ' -vf "[INPUT]format=rgb24,mgtvpythonisr=path=/home/zhoujs/mgtvML_FFmpeg/NNResize/:model=/home/zhoujs/mgtvML_FFmpeg/NNResize/checkpoints/DownNetNFv1_196000.pth.pth:multiple=1:width=960:height=540:module_name=NNResize_GPU[FID0];[FID0]scale=w=1920:h=1080:sws_flags=lanczos[OUTPUT]"'
-                        + f' -vf "[INPUT]format=rgb24,mgtvpythonisr=path=/home/zhoujs/mgtvML_FFmpeg/NNResize/:model=/home/zhoujs/mgtvML_FFmpeg/NNResize/checkpoints/{NTE_LOAD}:multiple=1:width={out_W}:height={out_H}:module_name=NNResize_GPU[FID0];[FID0]scale=w=1920:h=1080:sws_flags=lanczos[OUTPUT]"'
+                        + f' -vf "[INPUT]format=rgb24,mgtvpythonisr=path=/home/zhoujs/mgtvML_FFmpeg/NNResize/:model=/home/zhoujs/mgtvML_FFmpeg/NNResize/checkpoints/{NTE_LOAD}:multiple=1:width={out_W}:height={out_H}:module_name=NNResize_GPU[FID0];'
+                          f'[FID0]scale=w=1920:h=1080:sws_flags=bicubic[FID1];[FID1]setsar=sar=16/9[FID2];[FID2]setdar=dar=16/9[OUTPUT]"'
                         + ' -pix_fmt yuv420p -r 25 -y'
                         + ' "{}"'.format(output_video)
                     )
@@ -81,7 +85,7 @@ def lanczosdown_lanczosup():
                     + ' -i "{}"'.format(video)
                     # + ' -t 60'
                     + ' -pix_fmt yuv420p'
-                    + f' -vf "[INPUT]scale=w={out_W}:h={out_H}:sws_flags=lanczos[FID0];[FID0]scale=w=1920:h=1080:sws_flags=lanczos[OUTPUT]"'
+                    + f' -vf "[INPUT]scale=w={out_W}:h={out_H}:sws_flags=lanczos[FID0];[FID0]scale=w=1920:h=1080:sws_flags=lanczos,setsar=sar=16/9,setdar=dar=16/9"'
                     + ' -r 25 -y '
                     + ' "{}"'.format(output_video)
             )
@@ -103,7 +107,7 @@ def lanczosdowns_bicubicup():
                     + ' -ss 00:02:00 -to 00:03:00'
                     + ' -i "{}"'.format(video)
                     + ' -pix_fmt yuv420p'
-                    + f' -vf "[INPUT]scale=w={out_W}:h={out_H}:sws_flags=lanczos[FID0];[FID0]scale=w=1920:h=1080:sws_flags=bicubic[OUTPUT]"'
+                    + f' -vf "[INPUT]scale=w={out_W}:h={out_H}:sws_flags=lanczos[FID0];[FID0]scale=w=1920:h=1080:sws_flags=bicubic,setsar=sar=16/9,setdar=dar=16/9"'
                     + ' -r 25 -y '
                     + ' "{}"'.format(output_video)
             )
@@ -159,55 +163,56 @@ def cal_psnr():
     #         # subprocess.call(command_rmrf, shell=True)
 
 
-# nndown_bicubicup()
-# nndown_lanczosup()
+nndown_bicubicup()
+nndown_lanczosup()
 # lanczosdown_lanczosup()
 # lanczosdowns_bicubicup()
+
 # # cal_psnr()
-
-def nndown_test():
-    video_list = glob.glob(f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/测试视频源/*')
-    # video_list = glob.glob(f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/测试视频源_动漫/*')
-    output_dir = f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/temp_test/nndown{out_H}'
-    os.makedirs(output_dir, exist_ok=True)
-    # video sr
-    for video in sorted(video_list)[:1]:
-            base_name = os.path.basename(video)
-            output_video = os.path.join(output_dir, base_name.split('.')[0] + f'_{out_H}.y4m')
-            command_NNDownUP = (
-                        'CUDA_VISIBLE_DEVICES=1 /home/zhoujs/mgtvML_FFmpeg/ffmpeg'
-                        + ' -i "{}"'.format(video)
-                        + ' -t 10'
-                        # + f' -vf "format=rgb24,mgtvpythonisr=path=/home/zhoujs/mgtvML_FFmpeg/NNResize/:model=/home/zhoujs/mgtvML_FFmpeg/NNResize/checkpoints/{NTE_LOAD}:multiple=1:width={out_W}:height={out_H}:module_name=NNResize_GPU"'
-                        + f' -vf "[INPUT]format=rgb24,mgtvpythonisr=path=/home/zhoujs/mgtvML_FFmpeg/NNResize/:model=/home/zhoujs/mgtvML_FFmpeg/NNResize/checkpoints/{NTE_LOAD}:multiple=1:width={out_W}:height={out_H}:module_name=NNResize_GPU[FID0];'
-                          f'[FID0]scale=w=1920:h=1080:sws_flags=bicubic[FID1];[FID1]setsar=sar=16/9[FID2];[FID2]setdar=dar=16/9[OUTPUT]"'
-                        + ' -pix_fmt yuv420p -r 25 -y'
-                        + ' "{}"'.format(output_video)
-                    )
-            print(command_NNDownUP)
-            # subprocess.call(command_NNDownUP, shell=True)
-
-
-def lanczosdown_test():
-    video_list = glob.glob(f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/测试视频源/*')
-    # video_list = glob.glob(f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/测试视频源_动漫/*')
-    output_dir = f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/temp_test/lanczosdown{out_H}'
-    os.makedirs(output_dir, exist_ok=True)
-    # video sr
-    for video in sorted(video_list)[:1]:
-            base_name = os.path.basename(video)
-            output_video = os.path.join(output_dir, base_name.split('.')[0] + '.y4m')
-            command_lanczos_down_up = (
-                    'CUDA_VISIBLE_DEVICES=1 /home/zhoujs/mgtvML_FFmpeg/ffmpeg'
-                    + ' -i "{}"'.format(video)
-                    + ' -t 10'
-                    + ' -pix_fmt yuv420p'
-                    + f' -vf "scale=w={out_W}:h={out_H}:sws_flags=lanczos,setsar=sar=16/9,setdar=dar=16/9"'
-                    + ' -r 25 -y '
-                    + ' "{}"'.format(output_video)
-            )
-            print(command_lanczos_down_up)
-            # subprocess.call(command_lanczos_down_up, shell=True)
-
-nndown_test()
-lanczosdown_test()
+#
+# def nndown_test():
+#     video_list = glob.glob(f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/测试视频源/*')
+#     # video_list = glob.glob(f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/测试视频源_动漫/*')
+#     output_dir = f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/temp_test/nndown{out_H}'
+#     os.makedirs(output_dir, exist_ok=True)
+#     # video sr
+#     for video in sorted(video_list)[:1]:
+#             base_name = os.path.basename(video)
+#             output_video = os.path.join(output_dir, base_name.split('.')[0] + f'_{out_H}.y4m')
+#             command_NNDownUP = (
+#                         'CUDA_VISIBLE_DEVICES=1 /home/zhoujs/mgtvML_FFmpeg/ffmpeg'
+#                         + ' -i "{}"'.format(video)
+#                         + ' -t 10'
+#                         # + f' -vf "format=rgb24,mgtvpythonisr=path=/home/zhoujs/mgtvML_FFmpeg/NNResize/:model=/home/zhoujs/mgtvML_FFmpeg/NNResize/checkpoints/{NTE_LOAD}:multiple=1:width={out_W}:height={out_H}:module_name=NNResize_GPU"'
+#                         + f' -vf "[INPUT]format=rgb24,mgtvpythonisr=path=/home/zhoujs/mgtvML_FFmpeg/NNResize/:model=/home/zhoujs/mgtvML_FFmpeg/NNResize/checkpoints/{NTE_LOAD}:multiple=1:width={out_W}:height={out_H}:module_name=NNResize_GPU[FID0];'
+#                           f'[FID0]scale=w=1920:h=1080:sws_flags=bicubic[FID1];[FID1]setsar=sar=16/9[FID2];[FID2]setdar=dar=16/9[OUTPUT]"'
+#                         + ' -pix_fmt yuv420p -r 25 -y'
+#                         + ' "{}"'.format(output_video)
+#                     )
+#             print(command_NNDownUP)
+#             # subprocess.call(command_NNDownUP, shell=True)
+#
+#
+# def lanczosdown_test():
+#     video_list = glob.glob(f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/测试视频源/*')
+#     # video_list = glob.glob(f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/测试视频源_动漫/*')
+#     output_dir = f'/data/y/GPU-Server/test/zhangdy/workdir/NNDown/temp_test/lanczosdown{out_H}'
+#     os.makedirs(output_dir, exist_ok=True)
+#     # video sr
+#     for video in sorted(video_list)[:1]:
+#             base_name = os.path.basename(video)
+#             output_video = os.path.join(output_dir, base_name.split('.')[0] + '.y4m')
+#             command_lanczos_down_up = (
+#                     'CUDA_VISIBLE_DEVICES=1 /home/zhoujs/mgtvML_FFmpeg/ffmpeg'
+#                     + ' -i "{}"'.format(video)
+#                     + ' -t 10'
+#                     + ' -pix_fmt yuv420p'
+#                     + f' -vf "scale=w={out_W}:h={out_H}:sws_flags=lanczos,setsar=sar=16/9,setdar=dar=16/9"'
+#                     + ' -r 25 -y '
+#                     + ' "{}"'.format(output_video)
+#             )
+#             print(command_lanczos_down_up)
+#             # subprocess.call(command_lanczos_down_up, shell=True)
+#
+# nndown_test()
+# lanczosdown_test()
